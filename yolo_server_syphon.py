@@ -129,6 +129,7 @@ try:
                 )
 
                 # Get annotated frame with bounding boxes
+                # YOLO plot() returns RGB format (not BGR like OpenCV)
                 annotated_frame = results[0].plot()
 
                 # Send detection data via OSC
@@ -158,7 +159,8 @@ try:
                 annotated_frame = cv2.flip(annotated_frame, 0)
 
                 # Convert to BGRA for Syphon
-                annotated_bgra = cv2.cvtColor(annotated_frame, cv2.COLOR_BGR2BGRA)
+                # Note: YOLO plot() returns RGB format (not BGR like OpenCV)
+                annotated_bgra = cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGRA)
 
                 # Copy to Metal texture and publish
                 copy_image_to_mtl_texture(annotated_bgra, output_texture)
