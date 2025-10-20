@@ -274,13 +274,47 @@ TouchDesigner                      YOLO Server
 
 ## Future Enhancements
 
+### Model Features
 - [ ] Segmentation mode (YOLOv8-seg)
 - [ ] Pose estimation (YOLOv8-pose)
-- [ ] Object tracking (persistent IDs)
-- [ ] Custom trained models
-- [ ] Multi-class filtering via OSC
-- [ ] Confidence threshold control via OSC
-- [ ] TouchDesigner .toe example file
+- [ ] Object tracking (persistent IDs across frames)
+- [ ] Custom trained models support
+
+### OSC Input Commands (Control from TouchDesigner)
+
+Currently the server only **sends** detection data via OSC. Possible incoming control commands:
+
+#### Confidence Threshold
+```
+/yolo/confidence <float>  # Set minimum confidence (0.0-1.0)
+```
+Dynamically adjust detection sensitivity from TouchDesigner.
+
+#### Class Filtering
+```
+/yolo/filter/add <string>     # Only detect specific classes
+/yolo/filter/remove <string>  # Remove class from filter
+/yolo/filter/clear            # Detect all classes again
+```
+Example: `op('oscout1').sendOSC('/yolo/filter/add', ['person'])`
+
+#### Enable/Disable Detection
+```
+/yolo/enable <int>   # 1=on, 0=off (passthrough video mode)
+```
+Pause detection without stopping the server.
+
+#### IOU Threshold
+```
+/yolo/iou <float>  # Non-max suppression threshold (0.0-1.0)
+```
+Control how overlapping bounding boxes are merged.
+
+#### Model Switching
+```
+/yolo/model <string>  # Switch models: "yolov8n", "yolov11m", etc.
+```
+Hot-swap between different YOLO models at runtime.
 
 ## License
 
